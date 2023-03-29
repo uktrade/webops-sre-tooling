@@ -1,0 +1,10 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build',
+           '--tag', 'gcr.io/sre-docker-registry/webops-sre-tooling/tfenv:${COMMIT_SHA}',
+           '--tag', 'gcr.io/sre-docker-registry/webops-sre-tooling/tfenv:latest',
+           './tfenv']
+
+images:
+  - 'gcr.io/sre-docker-registry/webops-sre-tooling/tfenv:${COMMIT_SHA}'
+  - 'gcr.io/sre-docker-registry/webops-sre-tooling/tfenv:latest'
