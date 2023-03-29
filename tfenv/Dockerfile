@@ -24,5 +24,4 @@ VOLUME /var/tfenv
 # Default to latest; user-specifiable
 ENV TFENV_TERRAFORM_VERSION latest
 
-
 ENTRYPOINT ["/usr/local/bin/terraform"]
