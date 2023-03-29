@@ -30,3 +30,6 @@ jobs:
 
       - name: Run the pre-commit checks (as a failsafe)
         run: pre-commit run --all-files
+
+      - name: Run Checkov
+        uses: bridgecrewio/checkov-action@v12
