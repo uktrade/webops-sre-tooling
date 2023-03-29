@@ -31,5 +31,11 @@ jobs:
       - name: Run the pre-commit checks (as a failsafe)
         run: pre-commit run --all-files
 
+  check-for-misconfigurations:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
       - name: Run Checkov
         uses: bridgecrewio/checkov-action@v12
