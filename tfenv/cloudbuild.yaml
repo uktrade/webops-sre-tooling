@@ -2,6 +2,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
-      '--tag gcr.io/sre-docker-registry/webops-sre-tooling/tfenv:${COMMIT_SHA}',
+      '--tag',
+      'gcr.io/sre-docker-registry/webops-sre-tooling/tfenv:${COMMIT_SHA}',
       './tfenv'
     ]
