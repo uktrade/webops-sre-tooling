@@ -24,4 +24,6 @@ VOLUME /var/tfenv
 # Default to latest; user-specifiable
 ENV TFENV_TERRAFORM_VERSION latest
 
+HEALTHCHECK CMD /usr/local/bin/terraform --version || exit 1
+
 ENTRYPOINT ["/usr/local/bin/terraform"]
