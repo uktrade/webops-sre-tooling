@@ -3,8 +3,7 @@
 FROM alpine:3
 
 # Add runtime dependencies
-RUN apk update
-RUN apk add curl
+RUN apk add --no-cache bash curl
 
 ARG TFENV_VERSION=3.0.0
 RUN wget -O /tmp/tfenv.tar.gz "https://github.com/tfutils/tfenv/archive/refs/tags/v${TFENV_VERSION}.tar.gz" \
