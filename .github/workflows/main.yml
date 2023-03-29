@@ -19,6 +19,12 @@ jobs:
           python-version: '3.x'
           cache: 'pip'
 
+      - name: Cache pre-commit hooks
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-cache-${{github.sha}}
+
       - name: Install Python dependencies
         run: pip install -r requirements_dev.txt
 
