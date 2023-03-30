@@ -6,12 +6,38 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions: read-all
+
 jobs:
-  build:
+  check-for-secrets:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Hello world
-        run: echo Hello, world!
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+          cache: 'pip'
+
+      - name: Cache pre-commit hooks
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-cache-${{ hashFiles('.pre-commit-config.yaml') }}
+
+      - name: Install Python dependencies
+        run: pip install -r requirements_dev.txt
+
+      - name: Run the pre-commit checks (as a failsafe)
+        run: pre-commit run --all-files
+
+  check-for-misconfigurations:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run Checkov
+        uses: bridgecrewio/checkov-action@v12
