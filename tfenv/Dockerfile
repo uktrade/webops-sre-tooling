@@ -1,7 +1,7 @@
 FROM alpine:3
 
 # Add runtime dependencies
-RUN apk add --no-cache bash curl
+RUN apk add --no-cache bash curl git
 
 # Install tfenv
 ARG TFENV_VERSION=3.0.0
