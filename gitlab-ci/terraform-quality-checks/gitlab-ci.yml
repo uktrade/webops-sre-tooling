@@ -31,7 +31,7 @@ check_dot_terraform_version_file:
     # Use Folded Style (https://yaml.org/spec/1.2-old/spec.html#id2796251) to stop the colons messing things up.
     - >
       if [ ! -f .terraform-version ] || [ ! -s .terraform-version ]; then
-        echo 'ERROR:: Project must have a .terraform-version file with a version' && exit 1;
+        echo 'ERROR: Project must have a .terraform-version file with a version' && exit 1;
       fi
     - echo "Project Terraform version is $(cat .terraform-version)"
 
@@ -51,7 +51,7 @@ prevent_unchecked_dev_files:
   script:
     - >
       if [ -d env/dev ]; then
-        echo 'ERROR:: Project has env/dev, you must set not HAS_DEV_TERRAFORM to "false"' && exit 1;
+        echo 'ERROR: Project has env/dev, you must set not HAS_DEV_TERRAFORM to "false"' && exit 1;
       fi
   rules:
     - if: $HAS_DEV_TERRAFORM == "false"
