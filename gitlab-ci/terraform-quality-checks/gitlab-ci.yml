@@ -18,7 +18,7 @@ variables:
     - terraform init
     - terraform validate
   rules:
-    - if: $ENV == "dev" && $HAS_DEV_TERRAFORM == "true"
+    - if: $ENV == "dev" && $HAS_DEV_TERRAFORM != "false"
     - if: $ENV == "prod"
 
 .terraform_project_version: &terraform_project_version
@@ -45,6 +45,16 @@ check_terraform_fmt:
     - terraform --version
     - >
       terraform fmt -recursive -check || { echo "ERROR: Please run \`terraform fmt --recursive\` and commit the resulting changes" && exit 1; }
+
+prevent_unchecked_dev_files:
+  stage: terraform_quality_checks
+  script:
+    - >
+      if [ -f env/dev ];
+        then echo 'ERROR:: Project have env/dev, you must set not HAS_DEV_TERRAFORM to "false"' && exit 1;
+      fi
+  rules:
+    - if: $HAS_DEV_TERRAFORM == "false"
 
 tflint:
   stage: terraform_quality_checks
