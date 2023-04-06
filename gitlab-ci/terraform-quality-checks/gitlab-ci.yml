@@ -49,7 +49,6 @@ check_terraform_fmt:
 prevent_unchecked_dev_files:
   stage: terraform_quality_checks
   script:
-    - ls -al env
     - >
       if [ -d env/dev ]; then
         echo 'ERROR: Project has env/dev, you must set not HAS_DEV_TERRAFORM to "false"' && exit 1;
