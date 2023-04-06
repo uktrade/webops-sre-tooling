@@ -47,6 +47,14 @@ check_terraform_fmt:
     - >
       terraform fmt -recursive -check || { echo "ERROR: Please run \`terraform fmt --recursive\` and commit the resulting changes" && exit 1; }
 
+tflint:
+  stage: terraform_quality_checks
+  image: ghcr.io/terraform-linters/tflint-bundle:latest
+  script:
+    - tflint --init
+    - tflint --version
+    - tflint --recursive
+
 prevent_unchecked_dev_files:
   stage: terraform_quality_checks
   script:
@@ -57,14 +65,6 @@ prevent_unchecked_dev_files:
       fi
   rules:
     - if: $HAS_DEV_TERRAFORM == "false"
-
-tflint:
-  stage: terraform_quality_checks
-  image: ghcr.io/terraform-linters/tflint-bundle:latest
-  script:
-    - tflint --init
-    - tflint --version
-    - tflint --recursive
 
 terraform_validate_dev_project_version:
   stage: terraform_quality_checks
