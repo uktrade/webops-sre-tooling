@@ -43,12 +43,14 @@ check_terraform_fmt:
   script:
     - tfenv install
     - terraform --version
+    # Use Folded Style (https://yaml.org/spec/1.2-old/spec.html#id2796251) to stop the colons messing things up.
     - >
       terraform fmt -recursive -check || { echo "ERROR: Please run \`terraform fmt --recursive\` and commit the resulting changes" && exit 1; }
 
 prevent_unchecked_dev_files:
   stage: terraform_quality_checks
   script:
+    # Use Folded Style (https://yaml.org/spec/1.2-old/spec.html#id2796251) to stop the colons messing things up.
     - >
       if [ -d env/dev ]; then
         echo 'ERROR: Project has env/dev, you must set not HAS_DEV_TERRAFORM to "false"' && exit 1;
@@ -102,6 +104,7 @@ checkov_test:
     # https://www.checkov.io/2.Basics/CLI%20Command%20Reference.html#cli-command-reference
     # Working with a baseline https://bridgecrew.io/blog/checkov-prioritize-new-misconfigurations-infrastructure-as-code/
     - checkov --version
+    # Use Folded Style (https://yaml.org/spec/1.2-old/spec.html#id2796251) to stop the colons messing things up.
     - >
       if [ ! -f .checkov.baseline ]; then
         echo "{}" > .checkov.baseline
