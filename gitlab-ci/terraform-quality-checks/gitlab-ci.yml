@@ -50,7 +50,7 @@ prevent_unchecked_dev_files:
   stage: terraform_quality_checks
   script:
     - >
-      if [ -f env/dev ];
+      if [ -d env/dev ];
         then echo 'ERROR:: Project have env/dev, you must set not HAS_DEV_TERRAFORM to "false"' && exit 1;
       fi
   rules:
