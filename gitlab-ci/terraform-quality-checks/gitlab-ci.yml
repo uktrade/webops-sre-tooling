@@ -1,0 +1,115 @@
+variables:
+  HAS_DEV_TERRAFORM: 'true'
+
+.terraform_validate: &terraform_validate
+  image:
+    name: gcr.io/sre-docker-registry/webops-sre-tooling/tfenv:latest
+  script:
+    - env | grep TFENV
+    - cd "env/$ENV"
+    - echo "CI_JOB_STATUS = ${CI_JOB_STATUS}"
+    - tfenv install
+    - terraform --version
+    # Use Folded Style (https://yaml.org/spec/1.2-old/spec.html#id2796251) to stop the colons messing things up.
+    - >
+      if ! grep -q "\"terraform_version\": \"$(cat ../../.terraform-version)\"" terraform.tfstate; then
+        echo 'ERROR: Terraform versions in .terraform-version and terraform.tfstate must match' && exit 1;
+      fi
+    - terraform init
+    - terraform validate
+  rules:
+    - if: $ENV == "dev" && $HAS_DEV_TERRAFORM != "false"
+    - if: $ENV == "prod"
+
+.terraform_project_version: &terraform_project_version
+    # Set TFENV_TERRAFORM_VERSION to empty string so the version in .terraform-version is used
+    TFENV_TERRAFORM_VERSION: ""
+
+check_dot_terraform_version_file:
+  stage: terraform_quality_checks
+  script:
+    # Use Folded Style (https://yaml.org/spec/1.2-old/spec.html#id2796251) to stop the colons messing things up.
+    - >
+      if [ ! -f .terraform-version ] || [ ! -s .terraform-version ]; then
+        echo 'ERROR: Project must have a .terraform-version file with a version' && exit 1;
+      fi
+    - echo "Project Terraform version is $(cat .terraform-version)"
+
+check_terraform_fmt:
+  stage: terraform_quality_checks
+  image: gcr.io/sre-docker-registry/webops-sre-tooling/tfenv:latest
+  variables:
+    <<: *terraform_project_version
+  script:
+    - tfenv install
+    - terraform --version
+    # Use Folded Style (https://yaml.org/spec/1.2-old/spec.html#id2796251) to stop the colons messing things up.
+    - >
+      terraform fmt -recursive -check || { echo "ERROR: Please run \`terraform fmt --recursive\` and commit the resulting changes" && exit 1; }
+
+tflint:
+  stage: terraform_quality_checks
+  image: ghcr.io/terraform-linters/tflint-bundle:latest
+  script:
+    - tflint --init
+    - tflint --version
+    - tflint --recursive
+
+prevent_unchecked_dev_files:
+  stage: terraform_quality_checks
+  script:
+    # Use Folded Style (https://yaml.org/spec/1.2-old/spec.html#id2796251) to stop the colons messing things up.
+    - >
+      if [ -d env/dev ]; then
+        echo 'ERROR: Project has env/dev, you must set not HAS_DEV_TERRAFORM to "false"' && exit 1;
+      fi
+  rules:
+    - if: $HAS_DEV_TERRAFORM == "false"
+
+terraform_validate_dev_project_version:
+  stage: terraform_quality_checks
+  variables:
+    ENV: "dev"
+    <<: *terraform_project_version
+  <<: *terraform_validate
+
+terraform_validate_dev_latest_version:
+  stage: terraform_quality_checks
+  variables:
+    ENV: "dev"
+  <<: *terraform_validate
+
+terraform_validate_prod_project_version:
+  stage: terraform_quality_checks
+  variables:
+    ENV: "prod"
+    <<: *terraform_project_version
+  <<: *terraform_validate
+
+terraform_validate_prod_latest_version:
+  stage: terraform_quality_checks
+  variables:
+    ENV: "prod"
+  <<: *terraform_validate
+
+checkov_test:
+  # https://www.checkov.io/4.Integrations/GitLab%20CI.html
+  stage: terraform_quality_checks
+  image:
+    name: bridgecrew/checkov:latest
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  script:
+    # https://www.checkov.io/2.Basics/CLI%20Command%20Reference.html#cli-command-reference
+    # Working with a baseline https://bridgecrew.io/blog/checkov-prioritize-new-misconfigurations-infrastructure-as-code/
+    - checkov --version
+    # Use Folded Style (https://yaml.org/spec/1.2-old/spec.html#id2796251) to stop the colons messing things up.
+    - >
+      if [ ! -f .checkov.baseline ]; then
+        echo "{}" > .checkov.baseline
+      fi
+    - checkov --output cli --quiet --directory . --baseline .checkov.baseline
+
+stages:
+  - terraform_quality_checks
