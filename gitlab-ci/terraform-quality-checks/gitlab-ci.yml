@@ -73,11 +73,11 @@ prevent_unchecked_dev_files:
     ENV: "dev"
   <<: *prevent_unchecked_files
 
-#prevent_unchecked_prod_files:
-#  stage: terraform_quality_checks
-#  variables:
-#    ENV: "prod"
-#  <<: *prevent_unchecked_files
+prevent_unchecked_prod_files:
+  stage: terraform_quality_checks
+  variables:
+    ENV: "prod"
+  <<: *prevent_unchecked_files
 
 terraform_validate_dev_project_version:
   stage: terraform_quality_checks
