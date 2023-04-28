@@ -22,8 +22,7 @@ variables:
     - if: $ENV == "dev" && $HAS_DEV_TERRAFORM != "false"
     - if: $ENV == "prod" && $HAS_PROD_TERRAFORM != "false"
 
-# Todo...
-.prevent_unchecked_dev_files: &prevent_unchecked_files:
+.prevent_unchecked_files: &prevent_unchecked_files:
   script:
     # Use Folded Style (https://yaml.org/spec/1.2-old/spec.html#id2796251) to stop the colons messing things up.
     - >
