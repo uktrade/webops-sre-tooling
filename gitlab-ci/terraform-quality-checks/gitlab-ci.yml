@@ -31,7 +31,7 @@ variables:
       fi
   rules:
     - if: $ENV == "dev" && $HAS_DEV_TERRAFORM == "false"
-    - if: $ENV == "prod" && $HAS_DEV_TERRAFORM == "prod"
+    - if: $ENV == "prod" && $HAS_PROD_TERRAFORM == "false"
 
 .terraform_project_version: &terraform_project_version
     # Set TFENV_TERRAFORM_VERSION to empty string so the version in .terraform-version is used
