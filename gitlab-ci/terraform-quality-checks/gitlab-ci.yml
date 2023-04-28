@@ -22,16 +22,16 @@ variables:
     - if: $ENV == "dev" && $HAS_DEV_TERRAFORM != "false"
     - if: $ENV == "prod" && $HAS_PROD_TERRAFORM != "false"
 
-#.prevent_unchecked_files: &prevent_unchecked_files:
-#  script:
-#    # Use Folded Style (https://yaml.org/spec/1.2-old/spec.html#id2796251) to stop the colons messing things up.
-#    - >
-#      if [ -d env/dev ]; then
-#        echo "ERROR: Project has env/$ENV, you must set not HAS_$ENV_TERRAFORM to "\false\"" && exit 1;
-#      fi
-#  rules:
-#    - if: $ENV == "dev" && $HAS_DEV_TERRAFORM == "false"
-#    - if: $ENV == "prod" && $HAS_DEV_TERRAFORM == "prod"
+.prevent_unchecked_files: &prevent_unchecked_files:
+  script:
+    # Use Folded Style (https://yaml.org/spec/1.2-old/spec.html#id2796251) to stop the colons messing things up.
+    - >
+      if [ -d env/dev ]; then
+        echo "ERROR: Project has env/$ENV, you must set not HAS_$ENV_TERRAFORM to "\false\"" && exit 1;
+      fi
+  rules:
+    - if: $ENV == "dev" && $HAS_DEV_TERRAFORM == "false"
+    - if: $ENV == "prod" && $HAS_DEV_TERRAFORM == "prod"
 
 .terraform_project_version: &terraform_project_version
     # Set TFENV_TERRAFORM_VERSION to empty string so the version in .terraform-version is used
