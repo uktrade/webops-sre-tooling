@@ -15,7 +15,8 @@ Add the following to a `.gitlab-ci.yml` file in the root of your GitLab reposito
 
     include: https://raw.githubusercontent.com/uktrade/webops-sre-tooling/main/gitlab-ci/terraform-quality-checks/gitlab-ci.yml
 
-If your repository does not have `env/dev`, you can add this variable:
+If your repository does not have `env/dev` OR `env/prod`, you can set these variables to false:
 
     variables:
       HAS_DEV_TERRAFORM: 'false'
+      HAS_PROD_TERRAFORM: 'true'
