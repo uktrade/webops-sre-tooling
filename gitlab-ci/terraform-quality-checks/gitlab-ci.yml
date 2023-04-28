@@ -67,11 +67,11 @@ tflint:
     - tflint --version
     - tflint --recursive
 
-#prevent_unchecked_dev_files:
-#  stage: terraform_quality_checks
-#  variables:
-#    ENV: "dev"
-#  <<: *prevent_unchecked_files
+prevent_unchecked_dev_files:
+  stage: terraform_quality_checks
+  variables:
+    ENV: "dev"
+  <<: *prevent_unchecked_files
 
 prevent_unchecked_prod_files:
   stage: terraform_quality_checks
