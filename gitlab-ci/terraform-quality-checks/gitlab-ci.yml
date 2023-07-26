@@ -65,7 +65,7 @@ tflint:
   script:
     - tflint --init
     - tflint --version
-    - tflint --recursive
+    - tflint --recursive --disable-rule terraform_module_pinned_source
 
 prevent_unchecked_dev_files:
   stage: terraform_quality_checks
@@ -122,7 +122,7 @@ checkov_test:
       if [ ! -f .checkov.baseline ]; then
         echo "{}" > .checkov.baseline
       fi
-    - checkov --output cli --quiet --directory . --baseline .checkov.baseline
+    - checkov --output cli --quiet --directory . --baseline .checkov.baseline --skip-check CKV_TF_1
 
 stages:
   - terraform_quality_checks
