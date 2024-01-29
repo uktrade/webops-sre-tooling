@@ -1,6 +1,7 @@
 variables:
   HAS_DEV_TERRAFORM: 'true'
   HAS_PROD_TERRAFORM: 'true'
+  HAS_TF_STATE: 'true'
 
 .terraform_validate: &terraform_validate
   image:
@@ -21,6 +22,7 @@ variables:
   rules:
     - if: $ENV == "dev" && $HAS_DEV_TERRAFORM != "false"
     - if: $ENV == "prod" && $HAS_PROD_TERRAFORM != "false"
+    - if: $HAS_TF_STATE != "false"
 
 .prevent_unchecked_files: &prevent_unchecked_files
   script:
