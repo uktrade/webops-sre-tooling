@@ -20,9 +20,11 @@ variables:
     - terraform init
     - terraform validate
   rules:
+    - if: $HAS_TF_STATE == "false"
+      when: never
     - if: $ENV == "dev" && $HAS_DEV_TERRAFORM != "false"
     - if: $ENV == "prod" && $HAS_PROD_TERRAFORM != "false"
-    - if: $HAS_TF_STATE != "false"
+    - when: on_success
 
 .prevent_unchecked_files: &prevent_unchecked_files
   script:
