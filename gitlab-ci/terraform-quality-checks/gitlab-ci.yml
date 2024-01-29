@@ -1,6 +1,7 @@
 variables:
   HAS_DEV_TERRAFORM: 'true'
   HAS_PROD_TERRAFORM: 'true'
+  HAS_TF_STATE: 'true'
 
 .terraform_validate: &terraform_validate
   image:
@@ -19,6 +20,8 @@ variables:
     - terraform init
     - terraform validate
   rules:
+    - if: $HAS_TF_STATE == "false"
+      when: never
     - if: $ENV == "dev" && $HAS_DEV_TERRAFORM != "false"
     - if: $ENV == "prod" && $HAS_PROD_TERRAFORM != "false"
 
