@@ -20,3 +20,8 @@ If your repository does not have `env/dev` OR `env/prod`, you can set these vari
     variables:
       HAS_DEV_TERRAFORM: 'false'
       HAS_PROD_TERRAFORM: 'true'
+
+If your repository does not have a `terraform.tfstate` file, you can set this variables to false to skip this check:
+
+    variables:
+      HAS_TF_STATE: 'false'
