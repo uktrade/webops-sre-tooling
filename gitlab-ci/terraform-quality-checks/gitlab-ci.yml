@@ -125,7 +125,7 @@ checkov_test:
       if [ ! -f .checkov.baseline ]; then
         echo "{}" > .checkov.baseline
       fi
-    - checkov --output cli --quiet --directory . --baseline .checkov.baseline --skip-check CKV_TF_1 CKV_AWS_338
+    - checkov --output cli --quiet --directory . --baseline .checkov.baseline --skip-check CKV_TF_1,CKV2_AWS_338
 
 stages:
   - terraform_quality_checks
